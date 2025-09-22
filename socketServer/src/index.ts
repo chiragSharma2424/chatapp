@@ -17,7 +17,7 @@ wss.on('connection', (socket) => {
 
     socket.on('message', (message) => {
         console.log('message received: ' + message.toString());
-        
+
 
         // iterating on socket array and brodcasting message to all the clients that are connected
         for(let i = 0; i < allSockets.length; i++) {
@@ -25,4 +25,8 @@ wss.on('connection', (socket) => {
             s?.send(message.toString() + ": Sent from server");
         }
     })
+
+    socket.on('disconnect', () => {
+        allSockets = allSockets.filter(x => x!= socket);
+    });
 });
