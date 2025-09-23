@@ -10,16 +10,17 @@ interface User {
     room: String
 }
 
-let userCount = 0;
+
 let allSockets: User[] = [];
 
 
 
 wss.on('connection', (socket) => {
     // @ts-ignore
-    socket.on('message', (msg) => {
-        const pasrsedMessage = JSON.parse(msg as unknown as string);
+    socket.on('message', (message) => {
+        const pasrsedMessage = JSON.parse(message as unknown as string);
         if(pasrsedMessage.type === 'join') {
+            console.log("user joined room: " + pasrsedMessage.payload.roomId);
             allSockets.push({
                 socket,
                 room: pasrsedMessage.payload.roomId
@@ -28,6 +29,7 @@ wss.on('connection', (socket) => {
 
         // checking the room of user
         if(pasrsedMessage.type === 'chat') {
+            console.log("user wants to chat");
             let currentUserRoom = null;
             for(let i = 0; i < allSockets.length; i++) {
                 if(allSockets[i]?.socket === socket) {
